@@ -423,3 +423,111 @@ Address Management
 Shipping Integration
 Order Tracking
 Admin Dashboard Enhancements
+
+### Product Management System Expanded
+
+The product management system has been improved and connected more closely with the database.
+
+New improvements include:
+
+* Product creation functionality
+* Product listing APIs
+* Product details retrieval
+* Product service layer for cleaner code organization
+* Admin product management routes
+
+This makes it easier to manage products as the store grows.
+
+---
+
+### Product Image Uploads Added
+
+A dedicated product image system has now been implemented.
+
+Features include:
+
+* Upload product images
+* Store product images on the server
+* Connect images directly to products
+* Support for multiple jewellery product images
+
+Several jewellery product images have already been added to the project and linked to the catalog.
+
+---
+
+### Wishlist System Added
+
+Customers can now save products for later.
+
+Features include:
+
+* Add items to wishlist
+* View wishlist products
+* Remove wishlist items
+
+This provides a more complete shopping experience.
+
+---
+
+### Order Management Expanded
+
+The order system has been improved with dedicated order controllers and routes.
+
+Features include:
+
+* Create customer orders
+* View order information
+* Manage order records
+* Separate admin order management functionality
+
+This creates a strong foundation for checkout and payment integration.
+
+---
+
+### Admin Features Improved
+
+Administrative functionality has been separated into dedicated modules.
+
+This allows administrators to:
+
+* Manage products
+* Manage orders
+* Access protected admin-only features
+
+The project structure is now becoming more scalable and easier to maintain.
+
+---
+
+### Better Project Organization
+
+The backend now uses a more organized structure with:
+
+* Controllers
+* Routes
+* Middleware
+* Services
+* Upload management
+
+This makes future development easier and keeps the codebase cleaner.
+
+---
+
+### Current Status
+
+The project now contains the core systems required for a modern e-commerce platform:
+
+* User Authentication
+* Product Management
+* Product Images
+* Shopping Cart
+* Wishlist
+* Order Management
+* Admin Operations
+
+Next development phases are expected to focus on:
+
+* Checkout Experience
+* Payment Gateway Integration
+* Shipping Integration
+* Order Tracking
+* Frontend and Backend Feature Integration
