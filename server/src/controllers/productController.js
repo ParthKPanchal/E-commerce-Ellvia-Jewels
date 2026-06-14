@@ -3,10 +3,19 @@ const db = require("../config/db");
 const getAllProducts = (req, res) => {
   try {
     const query = `
-      SELECT *
-      FROM products
-      WHERE is_active = true
-      ORDER BY id DESC
+    SELECT
+        p.id,
+        p.sku,
+        p.product_name,
+        p.price,
+        p.category,
+        pi.image_url AS primary_image
+    FROM products p
+    LEFT JOIN product_images pi
+    ON p.id = pi.product_id
+    AND pi.is_primary = 1
+    WHERE p.is_active = 1
+    ORDER BY p.id DESC
     `;
 
     db.query(query, (err, results) => {
@@ -125,25 +134,20 @@ const createProduct = (req, res) => {
           VALUES ?
         `;
 
-        db.query(
-          imageQuery,
-          [imageValues],
-          (imageErr) => {
-            if (imageErr) {
-              return res.status(500).json({
-                success: false,
-                message: imageErr.message,
-              });
-            }
-
-            return res.status(201).json({
-              success: true,
-              message:
-                "Product and images created successfully",
-              productId,
+        db.query(imageQuery, [imageValues], (imageErr) => {
+          if (imageErr) {
+            return res.status(500).json({
+              success: false,
+              message: imageErr.message,
             });
           }
-        );
+
+          return res.status(201).json({
+            success: true,
+            message: "Product and images created successfully",
+            productId,
+          });
+        });
       } else {
         return res.status(201).json({
           success: true,
@@ -210,8 +214,126 @@ const getProductById = (req, res) => {
     });
   });
 };
+
+const updateProduct = (req, res) => {
+  const { id } = req.params;
+
+  const {
+    sku,
+    product_name,
+    description,
+    price,
+    category,
+    material,
+    finish_color,
+    stone_type,
+    size,
+    occasion,
+    style,
+    adjustable,
+    waterproof,
+    tarnish_resistant,
+    stock,
+    is_bestseller,
+    is_new_arrival,
+    is_active,
+  } = req.body;
+
+  const query = `
+    UPDATE products
+    SET
+      sku = ?,
+      product_name = ?,
+      description = ?,
+      price = ?,
+      category = ?,
+      material = ?,
+      finish_color = ?,
+      stone_type = ?,
+      size = ?,
+      occasion = ?,
+      style = ?,
+      adjustable = ?,
+      waterproof = ?,
+      tarnish_resistant = ?,
+      stock = ?,
+      is_bestseller = ?,
+      is_new_arrival = ?,
+      is_active = ?
+    WHERE id = ?
+  `;
+
+  const values = [
+    sku,
+    product_name,
+    description,
+    price,
+    category,
+    material,
+    finish_color,
+    stone_type,
+    size,
+    occasion,
+    style,
+    adjustable,
+    waterproof,
+    tarnish_resistant,
+    stock,
+    is_bestseller,
+    is_new_arrival,
+    is_active,
+    id,
+  ];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+    });console.log(req.body);
+  });
+};
+
+const deleteProduct = (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+    UPDATE products
+    SET is_active = 0
+    WHERE id = ?
+  `;
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+  });
+};
 module.exports = {
   getAllProducts,
   createProduct,
   getProductById,
+  updateProduct,
+  deleteProduct,
 };

@@ -253,3 +253,89 @@ Next development stages are expected to focus on:
 * Order Management
 * Payment Gateway Integration
 * Shipping Integration
+
+### User Authentication System Completed
+
+The project now supports user accounts.
+
+Features added:
+
+* User Registration
+* User Login
+* Password Encryption for security
+* JWT Token Authentication
+* User Profile Access
+
+Users can now create an account, log in securely, and access protected areas of the website.
+
+---
+
+### Protected Routes Added
+
+The backend now verifies user identity before allowing access to certain features.
+
+This ensures that only logged-in users can perform actions such as:
+
+* Viewing personal profile information
+* Managing shopping cart data
+* Accessing protected user features
+
+---
+
+### Shopping Cart API Created
+
+A complete cart management system has been added.
+
+Features include:
+
+* Add products to cart
+* View cart items
+* Update product quantity
+* Remove products from cart
+
+The system also checks whether a product already exists in the cart and updates the quantity automatically.
+
+---
+
+### Security Improvements
+
+Several security measures have been added:
+
+* Passwords are encrypted before being stored
+* Authentication tokens are generated during login
+* Protected routes verify valid user sessions
+* Unauthorized users are prevented from accessing restricted features
+
+---
+
+### Backend Expansion
+
+The backend now contains dedicated modules for:
+
+* Authentication
+* Product Management
+* Shopping Cart Management
+* Admin Features
+
+This makes the project more organized and easier to scale as new features are added.
+
+---
+
+### Current Status
+
+The project now supports the core customer journey:
+
+1. Create Account
+2. Login
+3. Browse Products
+4. Add Products to Cart
+5. Manage Cart Items
+
+The next major development phase is expected to focus on:
+
+* Frontend integration with authentication APIs
+* Checkout process
+* Order management
+* Payment gateway integration
+* Shipping system integration
+* Admin dashboard improvements
