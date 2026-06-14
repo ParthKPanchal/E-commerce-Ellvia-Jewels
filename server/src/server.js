@@ -5,7 +5,12 @@ const adminRoutes = require("./routes/adminRoutes");
 const productRoutes = require("./routes/productRoutes");
 const adminProductRoutes = require("./routes/adminProductRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const addressRoutes = require("./routes/addressRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const path = require("path");
+const adminOrderRoutes = require("./routes/adminOrderRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
+const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
 require("dotenv").config();
 
 const db = require("./config/db");
@@ -25,7 +30,11 @@ app.get("/", (req, res) => {
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/admin/products", adminProductRoutes);
 app.use("/api/cart", cartRoutes);
-
+app.use("/api/address", addressRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/admin/orders", adminOrderRoutes);
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/admin/dashboard", adminDashboardRoutes);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

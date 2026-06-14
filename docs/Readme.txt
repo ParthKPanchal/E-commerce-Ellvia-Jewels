@@ -339,3 +339,87 @@ The next major development phase is expected to focus on:
 * Payment gateway integration
 * Shipping system integration
 * Admin dashboard improvements
+
+Shopping Cart System Expanded
+
+The shopping cart functionality has been improved significantly.
+
+New features include:
+
+Add products to cart
+Update product quantity automatically
+View all cart items
+Remove products from cart
+Cart linked to logged-in users
+
+This allows customers to manage their shopping experience more easily.
+
+Order Management System Added
+
+The project now supports order creation.
+
+Features added:
+
+Create orders from cart items
+Calculate total order amount automatically
+Save order information in the database
+Generate order records for future checkout processing
+
+This creates the foundation for the complete purchase flow.
+
+Wishlist Feature Added
+
+Customers can now save products for later.
+
+Features include:
+
+Add products to wishlist
+View saved wishlist items
+Remove products from wishlist
+
+This improves the shopping experience by allowing users to keep track of products they are interested in.
+
+User-Based Shopping Experience
+
+The shopping features are now connected to user accounts.
+
+This means:
+
+Each user has their own cart
+Each user has their own wishlist
+Orders are connected to the correct customer account
+
+This makes the application behave more like a real e-commerce platform.
+
+Backend Growth
+
+The backend now includes dedicated systems for:
+
+Authentication
+Product Management
+Shopping Cart
+Wishlist
+Orders
+Admin Operations
+
+The project structure continues to become more organized and scalable.
+
+Current Status
+
+The customer shopping journey is now much closer to completion:
+
+Register Account
+Login
+Browse Products
+Add Products to Cart
+Save Products to Wishlist
+Create Orders
+
+Next development stages are expected to focus on:
+
+Checkout Experience
+Payment Gateway Integration
+Address Management
+Shipping Integration
+Order Tracking
+Admin Dashboard Enhancements
