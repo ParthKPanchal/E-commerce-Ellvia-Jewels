@@ -3,12 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const registerUser = async (req, res) => {
   try {
-    const {
-      full_name,
-      email,
-      password,
-      phone,
-    } = req.body;
+    const { full_name, email, password, phone } = req.body;
 
     // Check required fields
     if (!full_name || !email || !password) {
@@ -19,61 +14,50 @@ const registerUser = async (req, res) => {
     }
 
     // Check existing user
-    const checkUserQuery =
-      "SELECT * FROM users WHERE email = ?";
+    const checkUserQuery = "SELECT * FROM users WHERE email = ?";
 
-    db.query(
-      checkUserQuery,
-      [email],
-      async (err, result) => {
-        if (err) {
-          return res.status(500).json({
-            success: false,
-            message: err.message,
-          });
-        }
+    db.query(checkUserQuery, [email], async (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: err.message,
+        });
+      }
 
-        if (result.length > 0) {
-          return res.status(400).json({
-            success: false,
-            message: "User already exists",
-          });
-        }
+      if (result.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: "User already exists",
+        });
+      }
 
-        // Hash password
-        const hashedPassword =
-          await bcrypt.hash(password, 10);
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-        const insertQuery = `
+      const insertQuery = `
           INSERT INTO users
           (full_name, email, password, phone)
           VALUES (?, ?, ?, ?)
         `;
 
-        db.query(
-          insertQuery,
-          [
-            full_name,
-            email,
-            hashedPassword,
-            phone,
-          ],
-          (err, result) => {
-            if (err) {
-              return res.status(500).json({
-                success: false,
-                message: err.message,
-              });
-            }
-
-            res.status(201).json({
-              success: true,
-              message: "User registered successfully",
+      db.query(
+        insertQuery,
+        [full_name, email, hashedPassword, phone],
+        (err, result) => {
+          if (err) {
+            return res.status(500).json({
+              success: false,
+              message: err.message,
             });
           }
-        );
-      }
-    );
+
+          res.status(201).json({
+            success: true,
+            message: "User registered successfully",
+          });
+        },
+      );
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -86,8 +70,7 @@ const loginUser = (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const query =
-      "SELECT * FROM users WHERE email = ?";
+    const query = "SELECT * FROM users WHERE email = ?";
 
     db.query(query, [email], async (err, result) => {
       if (err) {
@@ -106,10 +89,7 @@ const loginUser = (req, res) => {
 
       const user = result[0];
 
-      const isMatch = await bcrypt.compare(
-        password,
-        user.password
-      );
+      const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
         return res.status(400).json({
@@ -126,7 +106,7 @@ const loginUser = (req, res) => {
         process.env.JWT_SECRET,
         {
           expiresIn: "7d",
-        }
+        },
       );
 
       res.status(200).json({
@@ -150,37 +130,150 @@ const loginUser = (req, res) => {
 };
 
 const getProfile = (req, res) => {
-  try {
-    const query =
-      "SELECT id, full_name, email, phone, role FROM users WHERE id = ?";
+  const userId = req.user.id;
 
-    db.query(
-      query,
-      [req.user.id],
-      (err, result) => {
-        if (err) {
-          return res.status(500).json({
-            success: false,
-            message: err.message,
-          });
-        }
+  const query = `
+    SELECT
+      id,
+      full_name,
+      email,
+      phone,
+      role,
+      created_at
+    FROM users
+    WHERE id = ?
+  `;
 
-        res.status(200).json({
-          success: true,
-          user: result[0],
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user: results[0],
+    });
+  });
+};
+
+const updateProfile = (req, res) => {
+  const userId = req.user.id;
+
+  const { full_name, phone } = req.body;
+
+  const query = `
+    UPDATE users
+    SET
+      full_name = ?,
+      phone = ?
+    WHERE id = ?
+  `;
+
+  db.query(query, [full_name, phone, userId], (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+    });
+  });
+};
+
+const changePassword = (req, res) => {
+  const userId = req.user.id;
+
+  const {
+    oldPassword,
+    newPassword,
+  } = req.body;
+
+  const getUserQuery = `
+    SELECT password
+    FROM users
+    WHERE id = ?
+  `;
+
+  db.query(
+    getUserQuery,
+    [userId],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: err.message,
         });
       }
-    );
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+
+      if (results.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      const isMatch = bcrypt.compareSync(
+        oldPassword,
+        results[0].password
+      );
+
+      if (!isMatch) {
+        return res.status(400).json({
+          success: false,
+          message: "Old password is incorrect",
+        });
+      }
+
+      const hashedPassword = bcrypt.hashSync(
+        newPassword,
+        10
+      );
+
+      const updateQuery = `
+        UPDATE users
+        SET password = ?
+        WHERE id = ?
+      `;
+
+      db.query(
+        updateQuery,
+        [hashedPassword, userId],
+        (err) => {
+          if (err) {
+            return res.status(500).json({
+              success: false,
+              message: err.message,
+            });
+          }
+
+          res.status(200).json({
+            success: true,
+            message: "Password changed successfully",
+          });
+        }
+      );
+    }
+  );
 };
 
 module.exports = {
   registerUser,
   loginUser,
   getProfile,
+  updateProfile,
+  changePassword,
 };

@@ -19,7 +19,7 @@ router.post(
 );
 
 router.get(
-  "/",
+  "/my-orders",
   verifyToken,
   getMyOrders
 );

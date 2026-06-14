@@ -105,7 +105,12 @@ const getMyOrders = (req, res) => {
   const userId = req.user.id;
 
   const query = `
-    SELECT *
+    SELECT
+      id,
+      total_amount,
+      payment_status,
+      order_status,
+      created_at
     FROM orders
     WHERE user_id = ?
     ORDER BY id DESC
@@ -132,7 +137,8 @@ const getOrderById = (req, res) => {
   const userId = req.user.id;
 
   const orderQuery = `
-    SELECT *
+    SELECT
+      *
     FROM orders
     WHERE id = ?
     AND user_id = ?
@@ -158,7 +164,7 @@ const getOrderById = (req, res) => {
 
       const itemsQuery = `
         SELECT
-          oi.product_id,
+          oi.id,
           oi.quantity,
           oi.price,
           p.product_name
