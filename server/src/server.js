@@ -12,7 +12,7 @@ const adminOrderRoutes = require("./routes/adminOrderRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
 require("dotenv").config();
-
+const contactRoutes = require("./routes/contactRoutes");
 const db = require("./config/db");
 
 const app = express();
@@ -27,7 +27,7 @@ app.use("/api/products", productRoutes);
 app.get("/", (req, res) => {
   res.send("Ellvia Jewels V2 Backend Running");
 });
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/uploads/products", express.static("uploads/products"));
 app.use("/api/admin/products", adminProductRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/address", addressRoutes);
@@ -35,6 +35,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/admin/orders", adminOrderRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/admin/dashboard", adminDashboardRoutes);
+app.use("/api/contact", contactRoutes);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
